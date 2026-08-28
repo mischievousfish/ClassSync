@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    working_dir: /workspace
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      FIREBASE_PROJECT_ID: demo-classsync
+      FIREBASE_CLIENT_EMAIL: firebase-adminsdk@demo-classsync.iam.gserviceaccount.com
+      FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY:-local-emulator-key}
+      FIRESTORE_EMULATOR_HOST: firebase:8080
+      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
+    volumes:
+      - .:/workspace
+      - /workspace/node_modules
+    depends_on:
+      - firebase
+
+  firebase:
+    image: andreysenov/firebase-tools:13
+    working_dir: /opt/firebase
+    command: firebase emulators:start --only firestore,auth --project demo-classsync
+    ports:
+      - "4000:4000"
+      - "8080:8080"
+      - "9099:9099"
+    volumes:
+      - ./firebase.json:/opt/firebase/firebase.json:ro

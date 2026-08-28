@@ -1,0 +1,35 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+# JavaScript / TypeScript
+dist/
+.next/
+coverage/
+*.tsbuildinfo
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+pubspec.lock
+
+# React Native / mobile generated files
+.expo/
+.gradle/
+android/.cxx/
+android/app/build/
+ios/Pods/
+ios/DerivedData/
+*.keystore
+*.jks
+
+# IDE and OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

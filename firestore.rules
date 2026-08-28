@@ -1,0 +1,80 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasRole(role) {
+      return signedIn() && request.auth.token.role == role;
+    }
+
+    function activeEnrollment(classId, studentId) {
+      return exists(/databases/$(database)/documents/classEnrollments/$(classId + '_' + studentId))
+        && get(/databases/$(database)/documents/classEnrollments/$(classId + '_' + studentId)).data.status == 'ACTIVE';
+    }
+
+    function ownsClass(classId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/classes/$(classId)).data.teacherId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow create: if signedIn() && request.auth.uid == userId
+        && request.resource.data.role == request.auth.token.role;
+      allow update: if signedIn() && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role;
+      allow delete: if signedIn() && request.auth.uid == userId;
+    }
+
+    match /classes/{classId} {
+      allow create: if hasRole('TEACHER') && request.resource.data.teacherId == request.auth.uid;
+      allow update, delete: if hasRole('TEACHER') && resource.data.teacherId == request.auth.uid;
+      // Class-code lookup and enrollment are performed by the authenticated API.
+      // Direct client reads are limited to enrolled students or the owning teacher.
+      allow read: if ownsClass(classId) || activeEnrollment(classId, request.auth.uid);
+    }
+
+    match /classEnrollments/{enrollmentId} {
+      allow read: if signedIn() && (resource.data.studentId == request.auth.uid || ownsClass(resource.data.classId));
+      allow create: if hasRole('STUDENT')
+        && request.resource.data.studentId == request.auth.uid
+        && request.resource.data.status == 'ACTIVE'
+        && enrollmentId == request.resource.data.classId + '_' + request.auth.uid;
+      allow update: if ownsClass(resource.data.classId);
+      allow delete: if ownsClass(resource.data.classId) || resource.data.studentId == request.auth.uid;
+    }
+
+    match /assignments/{assignmentId} {
+      allow create: if hasRole('TEACHER') && request.resource.data.teacherId == request.auth.uid
+        && ownsClass(request.resource.data.classId);
+      allow update, delete: if hasRole('TEACHER') && resource.data.teacherId == request.auth.uid
+        && ownsClass(resource.data.classId);
+      allow read: if signedIn() && (resource.data.teacherId == request.auth.uid
+        || (hasRole('STUDENT') && activeEnrollment(resource.data.classId, request.auth.uid)));
+    }
+
+    match /studentMicroProfiles/{profileId} {
+      // Students, including the profiled student, have no read or write access.
+      allow read: if ownsClass(resource.data.classId);
+      allow create: if ownsClass(request.resource.data.classId);
+      allow update, delete: if ownsClass(resource.data.classId);
+    }
+
+    match /studentSchedules/{studentId}/items/{itemId} {
+      allow read: if signedIn() && request.auth.uid == studentId;
+      allow write: if false;
+    }
+
+    match /ai_generated_assets/{assetId} {
+      allow read, write: if signedIn() && resource.data.teacherId == request.auth.uid;
+      allow create: if hasRole('TEACHER') && request.resource.data.teacherId == request.auth.uid;
+    }
+
+    match /syncJobs/{jobId} {
+      allow read, write: if false;
+    }
+  }
+}
