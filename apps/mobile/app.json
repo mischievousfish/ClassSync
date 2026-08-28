@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "ClassSync",
+    "slug": "classsync",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "classsync",
+    "plugins": ["expo-image-picker"],
+    "android": { "package": "app.classsync.mobile" },
+    "ios": { "bundleIdentifier": "app.classsync.mobile" }
+  }
+}

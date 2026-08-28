@@ -1,0 +1,24 @@
+{
+  "name": "classsync-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "*",
+    "@react-navigation/bottom-tabs": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/native-stack": "*",
+    "expo": "*",
+    "expo-image-picker": "*",
+    "expo-status-bar": "*",
+    "react": "*",
+    "react-native": "*",
+    "zustand": "*"
+  }
+}

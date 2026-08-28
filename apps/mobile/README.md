@@ -1,6 +1,6 @@
 # ClassSync Mobile
 
-React Native clean-architecture scaffold. The mobile app consumes the versioned backend contract in `docs/TECHNICAL_SPEC.md`.
+React Native/Expo mobile app foundation. The app consumes the versioned backend contract in `docs/TECHNICAL_SPEC.md`.
 
 The offline core is implemented without coupling to a native SQLite package. Inject an adapter around `react-native-sqlite-storage` or Expo SQLite through `SqliteDatabase`.
 
@@ -15,7 +15,9 @@ The offline core is implemented without coupling to a native SQLite package. Inj
 - `src/features/student`: schedule, deadlines, OCR capture
 - `src/features/teacher`: classes, roster, assignments, AI preparation
 
-Initialize the native shell with React Native CLI when mobile implementation begins, then keep feature state and API adapters inside each feature boundary.
+The current app shell includes Student Dashboard, Teacher Dashboard, OCR capture/confirmation, AI generator, profile mode switcher, bottom navigation, persistent Zustand mode state, and Firebase Messaging deep-link handling.
+
+Firebase React Native Messaging requires an Expo development build or bare React Native build; it is not available in Expo Go. Camera/gallery preview works through Expo Image Picker.
 
 ## Sync contract
 

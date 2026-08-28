@@ -3,7 +3,7 @@ import { FcmMessage } from '../sync/types';
 export interface FcmClient {
   onMessage(listener: (message: { data?: Record<string, string> }) => void): () => void;
   onNotificationOpenedApp(listener: (message: { data?: Record<string, string> }) => void): () => void;
-  getInitialNotification(): Promise<{ data?: Record<string, string }> | null>;
+  getInitialNotification(): Promise<{ data?: Record<string, string> } | null>;
 }
 
 export type NotificationNavigator = (route: { screen: string; classId: string; assignmentId: string }) => void;
