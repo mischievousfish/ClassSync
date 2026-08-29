@@ -10,6 +10,21 @@ service cloud.firestore {
       return signedIn() && request.auth.token.role == role;
     }
 
+    function orgMember(orgId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/organization_memberships/$(orgId + '_' + request.auth.uid))
+        && get(/databases/$(database)/documents/organization_memberships/$(orgId + '_' + request.auth.uid)).data.orgId == orgId;
+    }
+
+    function orgRole(orgId, role) {
+      return orgMember(orgId)
+        && get(/databases/$(database)/documents/organization_memberships/$(orgId + '_' + request.auth.uid)).data.orgRole == role;
+    }
+
+    function canManageOrg(orgId) {
+      return orgRole(orgId, 'ORG_ADMIN');
+    }
+
     function activeEnrollment(classId, studentId) {
       return exists(/databases/$(database)/documents/classEnrollments/$(classId + '_' + studentId))
         && get(/databases/$(database)/documents/classEnrollments/$(classId + '_' + studentId)).data.status == 'ACTIVE';
@@ -76,5 +91,99 @@ service cloud.firestore {
     match /syncJobs/{jobId} {
       allow read, write: if false;
     }
+
+    match /organizations/{orgId} {
+      allow read: if orgMember(orgId);
+      allow create: if signedIn() && request.resource.data.id == orgId
+        && getAfter(/databases/$(database)/documents/organization_memberships/$(orgId + '_' + request.auth.uid)).data.orgRole == 'ORG_ADMIN';
+      allow update, delete: if canManageOrg(orgId);
+    }
+
+    match /branches/{branchId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create: if canManageOrg(request.resource.data.orgId);
+      allow update, delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /organization_memberships/{membershipId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create: if canManageOrg(request.resource.data.orgId)
+        || (signedIn() && request.resource.data.userId == request.auth.uid
+          && request.resource.data.orgRole == 'ORG_ADMIN'
+          && getAfter(/databases/$(database)/documents/organizations/$(request.resource.data.orgId)).data.id == request.resource.data.orgId);
+      allow update, delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /shared_curriculum_library/{itemId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create: if orgMember(request.resource.data.orgId) && request.resource.data.createdById == request.auth.uid;
+      allow update, delete: if canManageOrg(resource.data.orgId)
+        || (orgMember(resource.data.orgId) && resource.data.createdById == request.auth.uid);
+    }
+
+    match /organization_invitations/{invitationId} {
+      allow read: if canManageOrg(resource.data.orgId);
+      allow create: if canManageOrg(request.resource.data.orgId);
+      allow update, delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /parent_profiles/{profileId} {
+      allow read: if signedIn() && request.auth.uid == resource.data.userId;
+      allow create: if signedIn() && request.auth.uid == request.resource.data.userId;
+      allow update: if signedIn() && request.auth.uid == resource.data.userId && request.resource.data.userId == resource.data.userId;
+      allow delete: if signedIn() && request.auth.uid == resource.data.userId;
+    }
+
+    match /tuition_bills/{billId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create, update: if canManageOrg(request.resource.data.orgId);
+      allow delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /attendance_records/{recordId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create, update: if orgMember(request.resource.data.orgId);
+      allow delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /parent_notification_events/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /assignmentSubmissions/{submissionId} {
+      allow read: if signedIn() && (resource.data.studentId == request.auth.uid || orgMember(resource.data.orgId));
+      allow create: if signedIn() && request.resource.data.studentId == request.auth.uid;
+      allow update: if signedIn() && resource.data.studentId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /student_diagnostic_notes/{noteId} {
+      allow read: if orgMember(resource.data.orgId);
+      allow create: if orgMember(request.resource.data.orgId);
+      allow update: if orgMember(resource.data.orgId);
+      allow delete: if canManageOrg(resource.data.orgId);
+    }
+
+    match /student_gamification_profiles/{userId} {
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow create, update: if false;
+      allow delete: if false;
+    }
+
+    match /quests_daily/{questId} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+      allow create, delete: if false;
+    }
+
+    match /badges_master/{badgeId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /gamification_events/{eventId} {
+      allow read, write: if false;
+    }
+
   }
 }

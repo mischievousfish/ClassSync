@@ -35,7 +35,7 @@ function parseJson<T>(text: string): T {
   try { return JSON.parse(text) as T; } catch { throw new AppError(502, 'Gemini returned invalid JSON'); }
 }
 
-async function generateJson<T>(prompt: string, responseSchema: object): Promise<T> {
+export async function generateStructuredJson<T>(prompt: string, responseSchema: object): Promise<T> {
   const response = await getClient().models.generateContent({
     model,
     contents: prompt,
@@ -47,7 +47,7 @@ async function generateJson<T>(prompt: string, responseSchema: object): Promise<
 
 export async function generateQuiz(teacherId: string, input: QuizRequest): Promise<AiAssetResponse<GeneratedQuiz>> {
   const safe = sanitizePromptParts({ topic: input.topic, gradeLevel: input.gradeLevel });
-  const content = await generateJson<GeneratedQuiz>(`Generate exactly ${input.numQuestions} educational quiz questions for topic "${safe.topic}" at grade level "${safe.gradeLevel}". Difficulty: ${input.difficulty}. Use clear language. Every question must have 2-5 options and correctOptionIndex must be zero-based. Return only JSON matching the supplied schema.`, quizSchema);
+  const content = await generateStructuredJson<GeneratedQuiz>(`Generate exactly ${input.numQuestions} educational quiz questions for topic "${safe.topic}" at grade level "${safe.gradeLevel}". Difficulty: ${input.difficulty}. Use clear language. Every question must have 2-5 options and correctOptionIndex must be zero-based. Return only JSON matching the supplied schema.`, quizSchema);
   if (content.questions.length !== input.numQuestions) throw new AppError(502, 'Gemini returned an unexpected question count');
   const reference = aiAssets.doc();
   const createdAt = Timestamp.now();
@@ -58,7 +58,7 @@ export async function generateQuiz(teacherId: string, input: QuizRequest): Promi
 export async function generateLessonOutline(teacherId: string, input: LessonOutlineRequest): Promise<AiAssetResponse<GeneratedLessonOutline>> {
   const safe = sanitizePromptParts({ topic: input.topic, documentText: input.documentText });
   const source = [safe.topic ? `Topic: ${safe.topic}` : '', safe.documentText ? `Source document:\n${safe.documentText}` : ''].filter(Boolean).join('\n');
-  const content = await generateJson<GeneratedLessonOutline>(`Create a practical lesson outline from the following source. Include learning objectives, key concepts, a bulleted breakdown, and a concise summary. Return only JSON matching the supplied schema.\n${source}`, lessonSchema);
+  const content = await generateStructuredJson<GeneratedLessonOutline>(`Create a practical lesson outline from the following source. Include learning objectives, key concepts, a bulleted breakdown, and a concise summary. Return only JSON matching the supplied schema.\n${source}`, lessonSchema);
   const reference = aiAssets.doc();
   const createdAt = Timestamp.now();
   await reference.set({ id: reference.id, teacherId, type: 'LESSON_OUTLINE', promptInput: input, generatedContent: content, model, createdAt });
@@ -67,7 +67,7 @@ export async function generateLessonOutline(teacherId: string, input: LessonOutl
 
 export async function parseAssignmentText(rawText: string): Promise<ParsedAssignment> {
   const safeText = sanitizePromptParts({ rawText }).rawText;
-  return generateJson<ParsedAssignment>(`Parse this OCR text from a student's homework or schedule. Extract subject, a concise assignmentTitle, cleaned extractedDescription, detectedDueDate as an ISO-8601 timestamp or null when ambiguous, and actionable actionItems. Return only JSON matching this shape: {"subject":"string","assignmentTitle":"string","extractedDescription":"string","detectedDueDate":"string|null","actionItems":["string"]}. OCR text:\n${safeText}`, {
+  return generateStructuredJson<ParsedAssignment>(`Parse this OCR text from a student's homework or schedule. Extract subject, a concise assignmentTitle, cleaned extractedDescription, detectedDueDate as an ISO-8601 timestamp or null when ambiguous, and actionable actionItems. Return only JSON matching this shape: {"subject":"string","assignmentTitle":"string","extractedDescription":"string","detectedDueDate":"string|null","actionItems":["string"]}. OCR text:\n${safeText}`, {
     type: 'object', properties: {
       subject: { type: 'string' }, assignmentTitle: { type: 'string' }, extractedDescription: { type: 'string' },
       detectedDueDate: { type: 'string', nullable: true }, actionItems: { type: 'array', items: { type: 'string' } },
