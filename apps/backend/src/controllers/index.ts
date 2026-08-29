@@ -8,6 +8,15 @@ export { generateLessonOutlineController, generateQuizController } from './ai.co
 export { parseAssignmentController } from './ocr.controller';
 export { sseChatController, SSEChatController } from './ai-tutor.controller';
 export { transcribeLectureController } from './audio.controller';
+export {
+  auditLogController,
+  complianceDashboardController,
+  retentionSweepController,
+  vpcController,
+  buildDpiaReport,
+  buildPrivacyExportPackage,
+  buildComplianceDashboardReport,
+} from './compliance.controller';
 
 export async function createClassController(request: Request, response: Response, next: NextFunction): Promise<void> {
   try { response.status(201).json(await createClass((request as AuthenticatedRequest).user.id, createClassSchema.parse(request.body))); } catch (error) { next(error); }

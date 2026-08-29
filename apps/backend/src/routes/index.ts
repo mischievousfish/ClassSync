@@ -24,6 +24,20 @@ import { sseChatController } from '../controllers/ai-tutor.controller';
 import { transcribeLectureController } from '../controllers/audio.controller';
 import { marketplaceRouter } from './marketplace.routes';
 import { I18nService, LocaleCode, translationCatalogs } from '../services/i18n.service';
+import {
+  auditLogController,
+  complianceDashboardController,
+  retentionSweepController,
+  vpcController,
+} from '../controllers/compliance.controller';
+import {
+  appStoreWebhookController,
+  createSubscriptionController,
+  financialMetricsController,
+  invoiceController,
+  paymentCheckoutController,
+  usageBillingController,
+} from '../controllers/commerce.controller';
 
 export const apiRouter = Router();
 const i18nService = new I18nService();
@@ -53,6 +67,16 @@ apiRouter.get('/student/recommendations', requireRole('STUDENT'), studentRecomme
 apiRouter.post('/privacy/consent', consentController);
 apiRouter.post('/privacy/delete-account', deleteAccountController);
 apiRouter.get('/privacy/export-data', exportDataController);
+apiRouter.post('/compliance/vpc', vpcController);
+apiRouter.get('/compliance/dashboard', complianceDashboardController);
+apiRouter.get('/compliance/audit/logs', auditLogController);
+apiRouter.post('/compliance/retention/sweep', retentionSweepController);
+apiRouter.post('/commerce/subscriptions', createSubscriptionController);
+apiRouter.post('/commerce/usage/billing', usageBillingController);
+apiRouter.post('/commerce/payments/checkout', paymentCheckoutController);
+apiRouter.post('/commerce/webhooks/apple-iap', appStoreWebhookController);
+apiRouter.post('/commerce/invoices', invoiceController);
+apiRouter.get('/commerce/financial-metrics', financialMetricsController);
 apiRouter.get('/gamification/profile', requireRole('STUDENT'), getGamificationProfileController);
 apiRouter.post('/gamification/streak', requireRole('STUDENT'), processGamificationActionController);
 apiRouter.post('/gamification/streak-freeze/purchase', requireRole('STUDENT'), purchaseStreakFreezeController);
