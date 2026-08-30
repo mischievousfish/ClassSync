@@ -11,11 +11,18 @@
 
 * {
   box-sizing: border-box;
-  font-family: 'Cormorant Unicase', serif !important;
 }
 
 html, body {
-  font-family: 'Cormorant Unicase', serif !important;
+  font-family: 'Maitree', serif;
+}
+
+body, p, span, a, button, input, textarea, select, li, div {
+  font-family: 'Maitree', serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading, .title, .heading {
+  font-family: 'Cormorant Unicase', serif;
 }
 
 html { scroll-behavior: smooth; }

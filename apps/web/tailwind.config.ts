@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Cormorant Unicase"', 'serif'],
-        serif: ['"Cormorant Unicase"', 'serif'],
-        mono: ['"Cormorant Unicase"', 'serif'],
+        sans: ['"Maitree"', 'serif'],
+        body: ['"Maitree"', 'serif'],
+        heading: ['"Cormorant Unicase"', 'serif'],
       },
     },
   },

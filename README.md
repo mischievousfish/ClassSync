@@ -15,7 +15,7 @@
 
 > One calendar for every learner. One AI copilot for every teacher.
 
-ClassSync là nền tảng EdTech hai chế độ giúp học sinh và giáo viên làm việc trên cùng một vòng lặp học tập: lịch học được đồng bộ, bài tập không mất trong chat, và AI giúp giáo viên chuẩn bị bài nhanh hơn gấp nhiều lần.
+ClassSync là nền tảng web EdTech hai chế độ giúp học sinh và giáo viên làm việc trên cùng một vòng lặp học tập: lịch học được đồng bộ, bài tập không mất trong chat, và AI giúp giáo viên chuẩn bị bài nhanh hơn gấp nhiều lần. Trải nghiệm chính thức được cung cấp trực tiếp trên trình duyệt web, không cần tải ứng dụng di động.
 
 ## 🚀 Tóm tắt ngắn cho README đầu trang
 
@@ -57,7 +57,7 @@ ClassSync kết nối hai mặt của hệ thống giáo dục:
 - Backend: Node.js + Express + TypeScript
 - Database/Firebase: Firestore + Auth + FCM
 - AI/OCR: Gemini + Google Cloud Vision
-- Monorepo-based product structure for web/mobile/companion workflows
+- Web-first monorepo structure for web and companion workflows
 
 ---
 
@@ -76,9 +76,8 @@ ClassSync kết nối hai mặt của hệ thống giáo dục:
 ClassSync/
 ├── apps/
 │   ├── backend/        # API, auth, services, routes, validation
-│   ├── web/            # Next.js frontend and demo landing page
-│   ├── mobile/         # mobile app scaffold and client app
-│   └── companion/      # extension / desktop companion
+│   ├── web/            # Next.js frontend and web landing page
+│   └── companion/      # extension / desktop companion workflows
 ├── docs/               # investor pitch, technical spec, compliance docs
 ├── infra/              # Terraform / deployment configuration
 ├── scripts/            # ETL, backup, migration, operational automation

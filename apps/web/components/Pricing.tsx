@@ -10,7 +10,7 @@ const plans = [
     icon: GraduationCap,
     featured: false,
     items: ['Lịch học hợp nhất', 'OCR bài tập & nhắc deadline', 'Tham gia lớp bằng mã code', 'Đồng bộ thời gian thực'],
-    cta: 'Tải app miễn phí',
+    cta: 'Đăng ký miễn phí',
   },
   {
     name: 'Teacher Pro',
