@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import { DM_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import ToastHost from '../components/ToastHost';
 import './globals.css';
-
-const sans = Plus_Jakarta_Sans({ subsets: ['latin', 'vietnamese'], variable: '--font-sans' });
-const mono = DM_Mono({ subsets: ['latin'], variable: '--font-mono', weight: ['400', '500'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://classsync.app'),
@@ -23,5 +20,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     description: 'Trợ lý AI và quản lý lịch học 2-trong-1 cho học sinh và giáo viên.',
     offers: [{ '@type': 'Offer', price: '0', priceCurrency: 'VND' }],
   };
-  return <html lang="vi"><body className={`${sans.variable} ${mono.variable}`}><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{children}</body></html>;
+  return (
+    <html lang="vi">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+        <ToastHost />
+        {children}
+      </body>
+    </html>
+  );
 }

@@ -18,7 +18,7 @@ export interface GraphEdge {
   label?: string;
 }
 
-export function KnowledgeGraphVisualizer({ nodes, edges }: { nodes: GraphNode[]; edges: GraphEdge[] }): JSX.Element {
+export function KnowledgeGraphVisualizer({ nodes, edges }: { nodes: GraphNode[]; edges: GraphEdge[] }): React.ReactElement {
   const nodeMap = new Map(nodes.map((node) => [node.id, node]));
 
   return (

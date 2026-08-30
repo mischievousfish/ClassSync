@@ -5,6 +5,18 @@
 **Status:** Proposed  
 **Audience:** Product, mobile, backend, QA, and infrastructure teams
 
+## Executive summary
+
+ClassSync is a two-mode EdTech platform designed to reduce coordination overhead for both students and teachers. The core product loop is simple: when a teacher creates or updates learning work, the system transforms it into a canonical assignment, fan-outs the event to all enrolled students, and surfaces the updated deadline in a unified schedule. Students gain clarity and habit; teachers gain time and leverage through AI-augmented class operations.
+
+This specification focuses on the MVP that proves the product loop works end-to-end:
+
+- Student Mode: unified schedule, deadline visibility, OCR from images, real-time class membership
+- Teacher Mode: class creation, assignment publishing, AI lesson/quiz generation, student micro-profile management
+- Shared platform: Firebase Auth, Firestore, FCM, backend validation, permission checks, modular service structure
+
+The technical goal is not to build a generic LMS. The goal is to create a reliable workflow engine for tutoring and small-class education that can later expand into center-level operations, cohort analytics, and parent notification workflows.
+
 ## 1. Product Summary
 
 ClassSync is a two-mode EdTech application:

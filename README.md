@@ -1,174 +1,200 @@
 # ClassSync
 
-> **Smart Management & AI Assistant for Students & Teachers**
-> Nền tảng quản lý học tập thông minh và trợ lý AI cho học sinh, giáo viên.
+<div align="center">
+  <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80" alt="ClassSync banner" width="100%" />
+</div>
 
-ClassSync is a two-mode EdTech application that connects student schedules with teacher classroom workflows. A teacher publishes a class schedule or assignment once; enrolled students receive the updated deadline in their unified schedule and an instant Firebase Cloud Messaging (FCM) alert.
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/status-MVP%20in%20progress-orange" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" />
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15.x-000000?logo=nextdotjs&logoColor=white" />
+  <img alt="Firebase" src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black" />
+  <img alt="AI" src="https://img.shields.io/badge/AI-Gemini%20%2B%20OCR-8A2BE2" />
+  <img alt="Monorepo" src="https://img.shields.io/badge/Architecture-Monorepo-0A7EA4" />
+</p>
 
-ClassSync la ung dung EdTech hai che do: Student Mode tap trung vao lich hoc va deadline, Teacher Mode tap trung vao quan ly lop va soan bai bang AI.
+> One calendar for every learner. One AI copilot for every teacher.
 
-## Key Features | Tinh nang chinh
+ClassSync là nền tảng EdTech hai chế độ giúp học sinh và giáo viên làm việc trên cùng một vòng lặp học tập: lịch học được đồng bộ, bài tập không mất trong chat, và AI giúp giáo viên chuẩn bị bài nhanh hơn gấp nhiều lần.
 
-- **Dual-Mode UI:** dedicated Student Mode and Teacher Mode with shared account and data.
-- **30s AI Quiz/Lesson Prep:** generate a structured 10-question quiz or lesson outline from a topic/document.
-- **Smart AI Remind & OCR:** photograph an assignment, extract its text and suggested due date, then confirm a deadline.
-- **2-Way Auto Sync:** assignment and schedule changes fan out to all active enrollments and trigger FCM alerts.
-- **Student Micro-Profile:** class-scoped private teacher notes and learning tags for personalization.
+## 🚀 Tóm tắt ngắn cho README đầu trang
 
-## Architecture and Tech Stack
+ClassSync kết nối hai mặt của hệ thống giáo dục:
 
-- **Mobile frontend:** React Native clean-architecture scaffold in `apps/mobile`; Flutter remains a supported client alternative.
-- **Backend API:** Node.js 20, Express, TypeScript, Zod validation, modular controllers/services/routes.
-- **AI engine:** Gemini adapter for quiz and lesson-outline generation, with strict structured-output validation.
-- **OCR engine:** Google Cloud Vision adapter (Tesseract can be used as a local fallback).
-- **Identity and data:** Firebase Authentication and Firestore via Firebase Admin SDK.
-- **Push and real-time:** Firebase Cloud Messaging plus Firestore listeners and per-student schedule projections.
-- **Local infrastructure:** Docker Compose with the Firebase Auth and Firestore Emulator Suite.
+- Student Mode: lịch học tổng hợp, nhắc deadline, OCR từ ảnh bài tập, đồng bộ thời gian thực.
+- Teacher Mode: quản lý lớp, tạo bài tập, tạo quiz/lesson outline bằng AI, lưu trữ Student Micro-Profile.
 
-## Repository Structure
+### Giá trị cốt lõi
+
+- Giảm rối thời gian và nhầm lẫn khi học sinh phải theo dõi qua Zalo, Messenger, ảnh chụp và ghi nhớ.
+- Tiết kiệm thời gian cho giáo viên bằng workflow AI và đồng bộ tự động.
+- Tạo nền tảng data layer có giá trị cho mô hình SaaS giáo dục theo hướng B2B và trung tâm luyện thi.
+
+### Roadmap / product angle
+
+- Student habit: miễn phí, dùng hằng ngày, dễ có cảm giác “đúng cần”.
+- Teacher monetization: AI prep + class management + phê duyệt nội dung.
+- Center expansion: mở rộng từ giáo viên cá nhân sang trung tâm/tổ chức.
+
+---
+
+## ✨ Tính năng nổi bật
+
+### Student Mode
+- Lịch học và deadline được tổng hợp trong một view duy nhất
+- Nhắc việc dựa trên thời gian thực và FCM
+- Chụp ảnh bài tập, OCR trích xuất văn bản, đề xuất deadline
+- Tham gia lớp bằng mã code và thấy dữ liệu ngay lập tức
+
+### Teacher Mode
+- Tạo / quản lý lớp học và học sinh trong một workspace riêng
+- Giao bài và đồng bộ tới toàn bộ lớp với một thao tác
+- Tạo quiz, lesson outline, prompt-to-lesson bằng AI trong 30 giây
+- Lưu Student Micro-Profile và tag nhóm học sinh để cá nhân hóa hỗ trợ
+
+### Platform architecture
+- Web app: Next.js + React + TypeScript
+- Backend: Node.js + Express + TypeScript
+- Database/Firebase: Firestore + Auth + FCM
+- AI/OCR: Gemini + Google Cloud Vision
+- Monorepo-based product structure for web/mobile/companion workflows
+
+---
+
+## 🧭 Documentation map
+
+- README này: overview ngắn gọn, product positioning, quick start
+- [docs/INVESTOR_PITCH.md](docs/INVESTOR_PITCH.md): pitch deck, market thesis, commercial model
+- [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md): spec kỹ thuật đầy đủ cho backend, schema, flows, architecture
+- [docs/DR_COMPLIANCE_RUNBOOK.md](docs/DR_COMPLIANCE_RUNBOOK.md): vận hành, DR, compliance, disaster recovery
+
+---
+
+## 🏗️ Cấu trúc monorepo
 
 ```text
 ClassSync/
-|-- apps/
-|   |-- backend/
-|   |   |-- src/
-|   |   |   |-- config/          # Firebase Admin initialization
-|   |   |   |-- controllers/     # HTTP request/response handlers
-|   |   |   |-- middleware/       # Firebase auth and role guards
-|   |   |   |-- models/           # TypeScript data interfaces
-|   |   |   |-- routes/           # Authenticated API routes
-|   |   |   |-- services/         # Class, assignment, sync, profile use cases
-|   |   |   |-- shared/           # Errors and request validation
-|   |   |   |-- app.ts
-|   |   |   `-- server.ts
-|   |   |-- Dockerfile
-|   |   `-- tsconfig.json
-|   `-- mobile/
-|       |-- src/
-|       |   |-- core/             # Navigation, API and Firebase clients
-|       |   |-- shared/           # UI kit, localization and validation
-|       |   |-- features/auth/
-|       |   |-- features/student/ # Schedule, deadline and OCR flows
-|       |   `-- features/teacher/ # Classes, roster and AI preparation
-|       `-- README.md
-|-- docs/
-|   `-- TECHNICAL_SPEC.md         # SRS, schema, API and sync contract
-|-- docker-compose.yml
-|-- firebase.json
-|-- .env.example
-|-- package.json
-`-- package-lock.json
+├── apps/
+│   ├── backend/        # API, auth, services, routes, validation
+│   ├── web/            # Next.js frontend and demo landing page
+│   ├── mobile/         # mobile app scaffold and client app
+│   └── companion/      # extension / desktop companion
+├── docs/               # investor pitch, technical spec, compliance docs
+├── infra/              # Terraform / deployment configuration
+├── scripts/            # ETL, backup, migration, operational automation
+├── docker-compose.yml
+├── firebase.json
+├── firestore.rules
+├── jest.config.js
+├── package.json
+├── README.md
+├── .env.example
+└── ...
 ```
 
-## Quick Start | Bat dau nhanh
+---
 
-### Prerequisites | Yeu cau
+## 🚀 Quick start
 
-- Node.js 20+ and npm 10+
-- Docker Desktop/Engine and Docker Compose v2
-- Firebase CLI (`npm install -g firebase-tools`)
-- React Native CLI and Android Studio/Xcode for native mobile development
-- A Firebase project with Authentication, Firestore and Cloud Messaging enabled for non-emulator use
+### Yêu cầu
 
-### Backend local development
+- Node.js 20+
+- npm 10+
+- Docker + Docker Compose
+- Firebase CLI
+
+### Cài đặt
 
 ```bash
+git clone https://github.com/mischievousfish/ClassSync.git
+cd ClassSync
 npm install
+```
+
+### Môi trường
+
+```bash
 cp .env.example .env
-# Fill Firebase service-account and provider keys in .env
-npm run typecheck
-npm run build
+```
+
+Ví dụ biến môi trường web:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+NEXT_PUBLIC_USE_MOCK_API=true
+```
+
+### Chạy local
+
+```bash
 npm run dev
+npm run web:dev
 ```
 
-The backend listens on `http://localhost:3000` and mounts routes under `/api/v1` by default. `/api` is also available as a compatibility alias for the original scaffold clients.
-
-### Local Firebase with Docker
+### Test
 
 ```bash
-cp .env.example .env
-docker compose up --build
+npm test
 ```
 
-The Emulator UI is available at `http://localhost:4000`, Firestore at port `8080`, Auth at port `9099`, and the API at port `3000`. The container uses project ID `demo-classsync` and does not require production credentials.
+---
 
-### Mobile development
+## 🛠️ Tech stack
 
-The mobile directories are an architecture scaffold. Initialize the native shell when choosing the client runtime:
+### Frontend / web
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Framer Motion
 
-```bash
-npx react-native@latest init ClassSyncMobile
-cd ClassSyncMobile
-npm start
-npx react-native run-android
-```
+### Backend
+- Node.js
+- Express
+- Firebase Admin SDK
+- Zod validation
+- JWT / Firebase ID token auth
 
-Move or map the generated app into `apps/mobile`, configure Firebase client credentials per platform, and point the API base URL at `http://10.0.2.2:3000/api/v1` for the Android emulator (`localhost` for iOS simulator).
+### AI / OCR
+- Gemini
+- Google Cloud Vision
+- Structured output validation
 
-## Environment Variables Checklist
+### Infrastructure
+- Docker
+- Firebase Emulator
+- Firestore
+- FCM
+- Jest
 
-Copy `.env.example` to `.env`; never commit `.env` or service-account secrets.
+---
 
-| Key | Required | Purpose |
-| --- | --- | --- |
-| `NODE_ENV` | yes | `development`, `test`, or `production` |
-| `PORT` | yes | Backend HTTP port, default `3000` |
-| `API_PREFIX` | yes | Versioned route prefix, normally `/api/v1` |
-| `FIREBASE_CONFIG` | recommended | JSON service-account config for deployment tooling |
-| `FIREBASE_PROJECT_ID` | yes | Firebase project ID |
-| `FIREBASE_CLIENT_EMAIL` | yes | Firebase Admin service-account email |
-| `FIREBASE_PRIVATE_KEY` | yes | Newline-escaped Admin private key |
-| `GEMINI_API_KEY` | for AI | Gemini provider credential |
-| `GEMINI_MODEL` | for AI | Model name, e.g. `gemini-2.0-flash` |
-| `CLOUD_VISION_KEY` | for OCR | Google Cloud Vision API key |
-| `CLOUD_VISION_PROJECT_ID` | for OCR | Google Cloud project for Vision |
-| `JWT_SECRET` | future auth | Secret for app-issued tokens if introduced; Firebase ID tokens are current auth |
-| `FCM_ENABLED` | yes | Enable/disable push delivery in local or test environments |
-| `OCR_MAX_FILE_SIZE_MB` | no | Upload size limit, default policy 10 MB |
-| `AI_REQUEST_TIMEOUT_MS` | no | AI provider timeout, default policy 30 seconds |
+## 📌 Vì sao ClassSync đáng chú ý
 
-## API Reference Summary
+1. Dễ hiểu trong 10 giây: lịch học + AI + đồng bộ là một luồng duy nhất.
+2. Có story monetization rõ ràng: free student habit → paid teacher leverage → center expansion.
+3. Có technical moat: workflow orchestration, permission model, real-time sync, AI + OCR + validation stack.
+4. Tăng giá trị nội bộ theo thời gian: dữ liệu học tập, lịch, class graph, và micro-profile tạo lợi thế cho sản phẩm dài hạn.
 
-All protected endpoints require `Authorization: Bearer <Firebase ID token>`. The token must carry the custom claim `role` with value `STUDENT` or `TEACHER`.
+---
 
-| Method | Endpoint | Role | Action |
-| --- | --- | --- | --- |
-| `POST` | `/api/v1/classes` | Teacher | Create class and unique six-character join code |
-| `GET` | `/api/v1/classes` | Any | List classes relevant to current user |
-| `POST` | `/api/v1/classes/join` | Student | Join with `class_code` |
-| `GET` | `/api/v1/classes/{classId}/students` | Teacher | View active class roster |
-| `POST` | `/api/v1/assignments` | Teacher | Create, sync and notify assignment |
-| `PATCH` | `/api/v1/assignments/{assignmentId}` | Teacher | Update assignment and projection |
-| `GET` | `/api/v1/student/schedule` | Student | Fetch unified classes and pending deadlines |
-| `POST` | `/api/v1/ai/generate-quiz` | Teacher | Generate structured 10-question quiz |
-| `POST` | `/api/v1/ai/generate-lesson` | Teacher | Generate lesson outline |
-| `POST` | `/api/v1/ocr/parse-assignment` | Student | Extract text/title/due date from image |
-| `PUT` | `/api/v1/classes/{classId}/students/{studentId}/profile` | Teacher | Update micro-profile notes/tags |
-| `PUT` | `/api/v1/users/me/fcm-tokens` | Any | Register a device token |
+## 📝 Phiên bản dài cho docs kỹ thuật
 
-See [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md) for request schemas, response examples, Firestore indexes, security rules and the FCM payload contract.
+Thông tin chi tiết về kiến trúc, Flow nghiệp vụ, database schema, auth, notification, AI/OCR và quy trình triển khai được cập nhật trong [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md).
 
-## Development Commands
+Nội dung kỹ thuật ở đó được tổ chức theo các mục sau:
 
-```bash
-npm run dev          # Watch backend source
-npm run typecheck   # Strict TypeScript validation
-npm run build       # Production compile to apps/backend/dist
-npm start            # Run compiled backend
-npm test             # Jest API, RBAC, OCR contract and mobile state tests
-npm run test:coverage # Coverage gate (80% for deterministic backend logic)
-```
+- Product summary
+- Goals and success metrics
+- User flows
+- Database schema design
+- API design and guarded auth
+- Sync, notification, and asynchronous fanout
+- AI/OCR adapter contracts
+- Deployment and operational reliability
 
-Tests live in `apps/backend/test`. Firebase, Gemini, Cloud Vision, FCM, and multipart boundaries are mocked so the suite runs without credentials. Add Firebase Emulator integration tests for the full Firestore fan-out and notification worker before enabling those provider-bound modules in the coverage collection.
+---
 
-## Security and Operations
+## 📄 License
 
-- Validate Firebase ID tokens server-side and enforce role plus resource ownership.
-- Keep Firestore canonical records separate from the read-optimized student schedule projection.
-- Treat FCM as best-effort delivery; clients reconcile from Firestore.
-- Use idempotency keys and retryable sync events for large classes.
-- Add production rate limiting, HTTPS, upload scanning, provider quotas, and Firebase Emulator integration tests before launch.
-
-## License
-
-Internal project documentation. Add the repository's chosen license before public distribution.
+Dự án đang trong giai đoạn MVP và tài liệu này được dùng cho phát triển nội bộ / demo / fundraising. Khi cần public release chính thức, nên bổ sung license cụ thể phù hợp với kế hoạch phân phối và cộng tác.

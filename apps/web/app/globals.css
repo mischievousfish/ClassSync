@@ -9,9 +9,17 @@
   --line: rgba(16, 39, 42, .14);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  font-family: 'Cormorant Unicase', serif !important;
+}
+
+html, body {
+  font-family: 'Cormorant Unicase', serif !important;
+}
+
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-sans), sans-serif; }
+body { margin: 0; background: var(--paper); color: var(--ink); }
 button, a { -webkit-tap-highlight-color: transparent; }
 ::selection { background: var(--lime); color: var(--ink); }
 

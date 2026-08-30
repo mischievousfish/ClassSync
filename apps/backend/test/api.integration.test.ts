@@ -23,6 +23,20 @@ jest.mock('../src/services/ocr.service', () => ({ extractTextFromImage: jest.fn(
 import { app } from '../src/app';
 
 describe('protected API contracts', () => {
+  it('allows a mock teacher token in development mode for demo flows', async () => {
+    process.env.NODE_ENV = 'development';
+    process.env.ALLOW_MOCK_AUTH = 'true';
+
+    const response = await request(app)
+      .post('/api/v1/ai/generate-quiz')
+      .set('Authorization', 'Bearer mock-teacher-token')
+      .send({ topic: 'Algebra', gradeLevel: '10' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({ assetId: 'asset-1' });
+    delete process.env.ALLOW_MOCK_AUTH;
+  });
+
   it('rejects a student from teacher AI endpoints', async () => {
     const response = await request(app)
       .post('/api/v1/ai/generate-quiz')

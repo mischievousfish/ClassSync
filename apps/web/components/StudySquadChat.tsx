@@ -22,7 +22,7 @@ export function StudySquadChat() {
     <div style={{ background: '#0f172a', color: '#e2e8f0', borderRadius: 16, padding: 16, maxWidth: 440 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <strong>Study Squad Live Chat</strong>
-        <button style={{ background: '#22c55e', color: '#052e16', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}>
+        <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('classsync:toast', { detail: { type: 'info', title: 'Study Squad', message: 'Nhóm học tập đã nhận được câu hỏi của bạn.' } }))} style={{ background: '#22c55e', color: '#052e16', border: 'none', borderRadius: 8, padding: '8px 10px', cursor: 'pointer' }}>
           Ask Squad for Help
         </button>
       </div>
